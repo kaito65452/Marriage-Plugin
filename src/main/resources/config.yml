@@ -1,25 +1,8 @@
 # ===== Debug Mode =====
 # Kalau true, plugin akan cetak log tambahan ke console server
-# buat bantu troubleshooting (propose, adopsi, bond xp, dll).
-# Bisa juga di-toggle langsung in-game pakai /marriageadmin debug <on|off>
+# buat bantu troubleshooting (propose, adopsi, dll).
+# Bisa juga di-toggle langsung in-game pakai /marry debug <on|off>
 debug: false
-
-# ===== Pengaturan Bond Level =====
-bond:
-  radius: 5.0
-  max-daily-xp: 500
-  xp-per-mine-block: 1
-  xp-per-fish: 3
-  xp-per-level: 100        # XP dibutuhkan naik level = xp-per-level * level saat ini
-
-  # ===== XP dari kedekatan pasangan (proximity) =====
-  proximity:
-    interval-seconds: 5          # tiap berapa detik dicek & dikasih XP kalau pasangan berdekatan
-    xp-per-interval: 5           # XP yang didapat tiap interval
-    max-daily-xp: 200            # batas XP KHUSUS dari kedekatan per hari (terpisah dari bond.max-daily-xp)
-    notify-xp-gained: false      # kalau true, kirim pesan tiap dapat XP dari kedekatan (default MATI biar tidak spam chat)
-    notify-cooldown-seconds: 60  # kalau notify-xp-gained true, jarak minimal antar pesan XP (anti-spam tambahan)
-                                  # pesan "naik level" TETAP selalu muncul walau notify-xp-gained dimatikan
 
 family:
   enabled: true
@@ -69,11 +52,6 @@ messages:
   not-married: "&cKamu belum menikah."
   divorce-success: "&cKamu resmi bercerai."
   divorce-notify: "&c%player% mengajukan perceraian denganmu."
-
-  # ===== BondManager =====
-  bond-xp-gained: "&d❤ &fBond XP &a+%xp% &7(%total% XP)"
-  bond-level-up: "&d❤ &fBond Level naik menjadi &eLevel %level%&f!"
-  bond-daily-limit: "&cBond XP harian sudah mencapai batas &e%max% XP&c."
 
   # ===== FamilyCommand =====
   family-disabled: "&cSistem keluarga sedang dinonaktifkan."

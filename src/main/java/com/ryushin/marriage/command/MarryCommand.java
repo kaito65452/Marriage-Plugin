@@ -257,43 +257,16 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
         boolean online = pasangan != null;
         String statusOnline = online ? "§a● Online" : "§7● Offline";
 
-        int xpPerLevel = plugin.getConfig().getInt("bond.xp-per-level", 100);
-        int level = marriage.getBondLevel();
-        int xp = marriage.getBondXp();
-        int xpDibutuhkan = xpPerLevel * level;
-
-        String progressBar = buatProgressBar(xp, xpDibutuhkan, 20);
         String lamaMenikah = formatDurasi(System.currentTimeMillis() - marriage.getMarriedAt());
 
         player.sendMessage("§8§m                                        ");
         player.sendMessage("§d§l          ❤ STATUS PERNIKAHAN ❤");
         player.sendMessage("§8§m                                        ");
         player.sendMessage("");
-        player.sendMessage(" §7Pasangan   §8» §f" + namaPasangan + "  " + statusOnline);
+        player.sendMessage(" §7Pasangan     §8» §f" + namaPasangan + "  " + statusOnline);
         player.sendMessage(" §7Menikah sejak §8» §f" + lamaMenikah + " yang lalu");
         player.sendMessage("");
-        player.sendMessage(" §7Bond Level §8» §e★ Level " + level);
-        player.sendMessage(" " + progressBar + " §7" + xp + "§8/§7" + xpDibutuhkan + " §fXP");
-        player.sendMessage("");
         player.sendMessage("§8§m                                        ");
-    }
-
-    /**
-     * Bikin progress bar teks pakai karakter blok, contoh hasil:
-     * "§d██████████§7░░░░░░░░░░"
-     */
-    private String buatProgressBar(int current, int max, int panjang) {
-        if (max <= 0) max = 1; // jaga-jaga cegah pembagian dengan nol
-
-        int terisi = (int) Math.min(panjang, Math.round((current / (double) max) * panjang));
-        int kosong = panjang - terisi;
-
-        StringBuilder bar = new StringBuilder("§d");
-        bar.append("█".repeat(Math.max(0, terisi)));
-        bar.append("§7");
-        bar.append("░".repeat(Math.max(0, kosong)));
-
-        return bar.toString();
     }
 
     /**

@@ -72,16 +72,19 @@ public class Database {
     public void saveMarriage(Marriage marriage) {
         String sql =
                 "INSERT INTO marriage " +
-                "(player1_uuid, player2_uuid, bond_xp, bond_level, married_at) " +
-                "VALUES (?, ?, ?, ?, ?)";
+                "(player1_uuid, player2_uuid, married_at) " +
+                "VALUES (?, ?, ?)";
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, marriage.getPlayer1Uuid().toString());
             ps.setString(2, marriage.getPlayer2Uuid().toString());
-            ps.setInt(3, marriage.getBondXp());
-            ps.setInt(4, marriage.getBondLevel());
-            ps.setLong(5, marriage.getMarriedAt());
+            ps.setLong(3, marriage.getMarriedAt());
             ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    marriage.setId(rs.getInt(1));
+                }
+            }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "[Database] Gagal simpan marriage", e);
         }
@@ -102,8 +105,6 @@ public class Database {
                             rs.getInt("id"),
                             UUID.fromString(rs.getString("player1_uuid")),
                             UUID.fromString(rs.getString("player2_uuid")),
-                            rs.getInt("bond_xp"),
-                            rs.getInt("bond_level"),
                             rs.getLong("married_at")
                     );
                 }
@@ -113,23 +114,6 @@ public class Database {
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "[Database] Gagal ambil data marriage", e);
             return null;
-        }
-    }
-
-    /**
-     * Update bond_xp dan bond_level satu pernikahan sekaligus.
-     * Dipanggil BondManager setelah hitung XP & level baru di memory.
-     */
-    public void updateBond(int marriageId, int bondXp, int bondLevel) {
-        String sql = "UPDATE marriage SET bond_xp = ?, bond_level = ? WHERE id = ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, bondXp);
-            ps.setInt(2, bondLevel);
-            ps.setInt(3, marriageId);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "[Database] Gagal update bond xp/level", e);
         }
     }
 

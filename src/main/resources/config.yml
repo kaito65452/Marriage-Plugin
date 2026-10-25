@@ -1,39 +1,78 @@
 # ===== Debug Mode =====
-# Kalau true, plugin akan cetak log tambahan ke console server
-# buat bantu troubleshooting (propose, dll).
-# Bisa juga di-toggle langsung in-game pakai /marriageadmin debug <on|off>
+# Kalau true, plugin akan cetak log tambahan ke console server buat bantu troubleshooting.
+# Bisa juga di-toggle langsung in-game pakai /marry debug <on|off>
 debug: false
+
+# ===== Pengaturan Pernikahan =====
+marry:
+  cooldown-seconds: 60
+  proposal-timeout-seconds: 120
+
+# ===== Pengaturan Kiss =====
+kiss:
+  enabled: true
+  cooldown-seconds: 30
+  max-distance: 2.0
+  particle: HEART
+  sound: ENTITY_EXPERIENCE_ORB_PICKUP
+
+# ===== Pengaturan Gift =====
+gift:
+  money:
+    enabled: true
+    min-amount: 1.0
+    max-amount: 1000000.0
+  item:
+    enabled: true
+    blacklist:
+      - BEDROCK
+      - BARRIER
+      - STRUCTURE_BLOCK
+      - COMMAND_BLOCK
+      - CHAIN_COMMAND_BLOCK
+      - REPEATING_COMMAND_BLOCK
+
+# ===== Pengaturan Teleport =====
+tp:
+  enabled: true
+  cooldown-seconds: 600
+  allow-cross-world: true
+
+# ===== Pengaturan Home =====
+home:
+  enabled: true
+  max-homes: 3
 
 # ===== Database =====
 database:
   file-name: "marriage.db"
 
 # ===== Pesan =====
-# Semua pesan di sini boleh diedit bebas, termasuk warna (pakai kode &).
-# Placeholder (%player%, %xp%, dst) HARUS tetap ada persis seperti aslinya,
-# hanya teks di sekitarnya yang boleh diubah.
+# Semua pesan boleh diedit bebas, termasuk kode warna (&).
+# Placeholder (%player%, %amount%, dst) harus tetap ada persis seperti aslinya.
 messages:
   prefix: "&d[Marriage] &r"
 
-  # ===== Umum / Admin =====
+  # Umum & Admin
   no-permission: "&cKamu tidak punya izin menggunakan command ini."
   config-reloaded: "&aKonfigurasi berhasil di-reload!"
   debug-status: "&7Debug mode saat ini: %status%"
-  debug-usage: "&7Gunakan: /marriageadmin debug <on|off>"
+  debug-usage: "&7Gunakan: /marry debug <on|off>"
   debug-changed: "&7Debug mode sekarang: %status%"
-  admin-usage: "&cGunakan: /marriageadmin <reload|debug> [on|off]"
-  admin-unknown-action: "&cAksi tidak dikenal. Gunakan: reload, debug"
+  unknown-action: "&cAksi tidak dikenal. Gunakan: /marry"
 
-  # ===== MarryCommand =====
-  usage-marry: "&cGunakan: /marry <propose|accept|deny|divorce|info> [player]"
-  unknown-action: "&cAksi tidak dikenal. Gunakan: propose, accept, deny, divorce, info"
+  # Marry Inti
+  usage-marry: "&cGunakan: /marry <propose|accept|deny|divorce|info|kiss|gift|tp|sethome|home> [args]"
   usage-propose: "&cGunakan: /marry propose <player>"
   cooldown-active: "&cTunggu %seconds% detik lagi sebelum membuat lamaran."
   player-not-found: "&cPlayer tidak ditemukan atau sedang offline."
+  partner-offline: "&cPasanganmu sedang offline."
   cannot-propose-self: "&cKamu tidak bisa melamar dirimu sendiri."
   already-married-self: "&cKamu sudah menikah!"
   target-already-married: "&c%player% sudah menikah dengan orang lain."
   target-has-pending-proposal: "&cPlayer tersebut masih memiliki lamaran yang belum dijawab."
+  already-have-pending-proposal: "&cKamu masih memiliki lamaran keluar yang belum dijawab."
+  target-already-proposed-to-you: "&c%player% sudah melamarmu! Ketik /marry accept untuk menerimanya."
   propose-sent: "&aLamaran terkirim ke %player%! Lamaran berlaku selama %timeout% detik."
   propose-received: "&d%player% melamarmu! Ketik &f/marry accept &datau &f/marry deny &d(dalam %timeout% detik)."
   propose-expired-target: "&7Lamaran dari %player% telah kadaluarsa."
@@ -47,3 +86,52 @@ messages:
   not-married: "&cKamu belum menikah."
   divorce-success: "&cKamu resmi bercerai."
   divorce-notify: "&c%player% mengajukan perceraian denganmu."
+
+  # Kiss
+  kiss-disabled: "&cFitur kiss sedang dinonaktifkan."
+  kiss-cooldown: "&cTunggu %seconds% detik lagi sebelum bisa berciuman lagi."
+  kiss-too-far: "&cKamu harus berada dekat dengan pasanganmu untuk berciuman!"
+  kiss-different-world: "&cPasanganmu berada di dunia yang berbeda."
+  kiss-success: "&d❤ &fKamu mencium &d%player%&f!"
+  kiss-received: "&d❤ &d%player% &fmenciummu!"
+
+  # Gift
+  gift-usage: "&cGunakan: /marry gift <money|item> [jumlah]"
+  gift-economy-unavailable: "&cFitur ekonomi tidak tersedia di server ini."
+  gift-money-disabled: "&cFitur gift money sedang dinonaktifkan."
+  gift-money-usage: "&cGunakan: /marry gift money <jumlah>"
+  gift-money-invalid: "&cJumlah uang tidak valid."
+  gift-money-limit: "&cJumlah harus antara %min% sampai %max%."
+  gift-money-no-funds: "&cUangmu tidak mencukupi untuk transfer ini."
+  gift-money-failed: "&cGagal melakukan transfer uang."
+  gift-money-sent: "&aKamu mengirim &e%amount% &ake &d%player%&a!"
+  gift-money-received: "&aKamu menerima &e%amount% &adari pasanganmu &d%player%&a!"
+  gift-item-disabled: "&cFitur gift item sedang dinonaktifkan."
+  gift-item-empty: "&cPegang item di tangan utama yang ingin kamu berikan ke pasangan."
+  gift-item-blacklisted: "&cItem ini dilarang untuk dikirimkan."
+  gift-item-inventory-full: "&cInventory %player% penuh!"
+  gift-item-sent: "&aKamu mengirim &e%amount%x %item% &ake &d%player%&a!"
+  gift-item-received: "&aKamu menerima &e%amount%x %item% &adari pasanganmu &d%player%&a!"
+
+  # Teleport
+  tp-disabled: "&cFitur teleportasi sedang dinonaktifkan."
+  tp-essentials-unavailable: "&cFitur teleport memerlukan plugin EssentialsX."
+  tp-different-world: "&cPasanganmu berada di dunia lain dan teleportasi lintas dunia tidak diizinkan."
+  tp-cooldown: "&cTunggu %minutes% menit %seconds% detik lagi untuk menggunakan teleportasi."
+  tp-success: "&aMemulai teleportasi ke pasanganmu %player%..."
+  tp-failed: "&cGagal teleport ke pasanganmu."
+
+  # Home
+  home-disabled: "&cFitur home keluarga sedang dinonaktifkan."
+  home-essentials-unavailable: "&cFitur home memerlukan plugin EssentialsX."
+  home-set-usage: "&cGunakan: /marry sethome <nama>"
+  home-invalid-name: "&cNama home hanya boleh huruf, angka, garis bawah (_), atau strip (-) maksimal 16 karakter."
+  home-limit-reached: "&cKeluarga kalian sudah mencapai batas maksimal %max% home."
+  home-overwrite-prompt: "&eHome '%name%' sudah ada. Ketik /marry sethome %name% confirm untuk menimpanya."
+  home-set-success: "&aHome bersama '%name%' berhasil disimpan!"
+  home-list-empty: "&7Keluargamu belum memiliki home yang tersimpan. Buat dengan /marry sethome <nama>."
+  home-not-found: "&cHome '%name%' tidak ditemukan."
+  home-world-missing: "&cDunia tempat home berada sudah tidak tersedia."
+  home-unsafe: "&cLokasi home tidak aman untuk teleportasi (terhalang balok/lava)!"
+  home-teleport-success: "&aMemulai teleportasi ke home '%name%'..."
+  home-teleport-failed: "&cGagal teleport ke home."

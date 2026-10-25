@@ -1,8 +1,9 @@
 package com.ryushin.marriage;
 
 import com.ryushin.marriage.command.MarryCommand;
-import com.ryushin.marriage.command.AdminCommand;
 import com.ryushin.marriage.data.Database;
+import com.ryushin.marriage.hook.EssentialsHook;
+import com.ryushin.marriage.hook.VaultHook;
 import com.ryushin.marriage.listener.MarriageListener;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,6 +13,9 @@ import java.io.File;
 public class MarriagePlugin extends JavaPlugin {
     private Database database;
     private static MarriagePlugin instance;
+
+    private VaultHook vaultHook;
+    private EssentialsHook essentialsHook;
 
     private boolean debug;
     private MarryCommand marryCommand;
@@ -37,16 +41,29 @@ public class MarriagePlugin extends JavaPlugin {
         database.connect();
         database.initTables();
 
+        vaultHook = new VaultHook();
+        if (vaultHook.isAvailable()) {
+            getLogger().info("[Hook] Vault Economy berhasil terhubung.");
+        } else {
+            getLogger().info("[Hook] Vault Economy tidak ditemukan. Fitur gift money dinonaktifkan.");
+        }
+
+        essentialsHook = new EssentialsHook();
+        if (essentialsHook.isAvailable()) {
+            getLogger().info("[Hook] EssentialsX berhasil terhubung.");
+        } else {
+            getLogger().info("[Hook] EssentialsX tidak ditemukan. Fitur TP dan Home dinonaktifkan.");
+        }
+
         marryCommand = new MarryCommand(this);
         registerCommand("marry", marryCommand);
-        registerCommand("marriageadmin", new AdminCommand(this));
 
         getServer().getPluginManager().registerEvents(
                 new MarriageListener(marryCommand),
                 this
         );
 
-        getLogger().info("MarriagePlugin Berhasil Dimuat!");
+        getLogger().info("MarriagePlugin Berhasil Dimuat! (v" + getDescription().getVersion() + ")");
     }
 
     @Override
@@ -58,6 +75,8 @@ public class MarriagePlugin extends JavaPlugin {
             database = null;
         }
 
+        vaultHook = null;
+        essentialsHook = null;
         instance = null;
 
         getLogger().info("MarriagePlugin Dinonaktifkan");
@@ -92,6 +111,8 @@ public class MarriagePlugin extends JavaPlugin {
     public void reloadPluginConfig() {
         reloadConfig();
         loadConfigValues();
+        if (vaultHook != null) vaultHook.setupEconomy();
+        if (essentialsHook != null) essentialsHook.setupEssentials();
         getLogger().info("Config berhasil di-reload. Debug mode: " + (debug ? "ON" : "OFF"));
     }
 
@@ -113,6 +134,14 @@ public class MarriagePlugin extends JavaPlugin {
 
     public Database getDatabase() {
         return database;
+    }
+
+    public VaultHook getVaultHook() {
+        return vaultHook;
+    }
+
+    public EssentialsHook getEssentialsHook() {
+        return essentialsHook;
     }
 
     public static MarriagePlugin getInstance() {

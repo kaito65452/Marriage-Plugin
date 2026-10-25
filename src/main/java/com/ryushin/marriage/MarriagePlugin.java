@@ -1,10 +1,9 @@
 package com.ryushin.marriage;
 
 import com.ryushin.marriage.command.MarryCommand;
-import com.ryushin.marriage.command.FamilyCommand;
 import com.ryushin.marriage.command.AdminCommand;
 import com.ryushin.marriage.data.Database;
-import com.ryushin.marriage.listener.FamilyListener;
+import com.ryushin.marriage.listener.MarriageListener;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,11 +13,8 @@ public class MarriagePlugin extends JavaPlugin {
     private Database database;
     private static MarriagePlugin instance;
 
-    private boolean familySystemEnabled;
     private boolean debug;
-
     private MarryCommand marryCommand;
-    private FamilyCommand familyCommand;
 
     @Override
     public void onEnable() {
@@ -43,14 +39,10 @@ public class MarriagePlugin extends JavaPlugin {
 
         marryCommand = new MarryCommand(this);
         registerCommand("marry", marryCommand);
-
-        familyCommand = new FamilyCommand(this);
-        registerCommand("family", familyCommand);
-
         registerCommand("marriageadmin", new AdminCommand(this));
 
         getServer().getPluginManager().registerEvents(
-                new FamilyListener(familyCommand, marryCommand),
+                new MarriageListener(marryCommand),
                 this
         );
 
@@ -60,7 +52,6 @@ public class MarriagePlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         marryCommand = null;
-        familyCommand = null;
 
         if (database != null) {
             database.close();
@@ -95,7 +86,6 @@ public class MarriagePlugin extends JavaPlugin {
 
     private void loadConfigValues() {
         var config = getConfig();
-        familySystemEnabled = config.getBoolean("family.enabled", true);
         debug = config.getBoolean("debug", false);
     }
 
@@ -123,10 +113,6 @@ public class MarriagePlugin extends JavaPlugin {
 
     public Database getDatabase() {
         return database;
-    }
-
-    public boolean isFamilySystemEnabled() {
-        return familySystemEnabled;
     }
 
     public static MarriagePlugin getInstance() {

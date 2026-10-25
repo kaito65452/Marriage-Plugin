@@ -10,8 +10,6 @@ softdepend: [Vault, Essentials]
 commands:
   marry:
     description: Menikah dengan pemain
-  family:
-    description: Mengelola relasi keluarga
   marriageadmin:
     description: Perintah admin plugin (reload config, toggle debug)
     permission: marriage.admin

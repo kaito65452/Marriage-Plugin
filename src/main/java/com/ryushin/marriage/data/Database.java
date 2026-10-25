@@ -10,8 +10,6 @@ import java.util.logging.Logger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.UUID;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Database {
 
@@ -125,82 +123,6 @@ public class Database {
             ps.executeUpdate();
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "[Database] Gagal hapus marriage", e);
-        }
-    }
-
-    public void saveFamilyRelation(FamilyRelation relation) {
-        String sql =
-                "INSERT INTO family_relation " +
-                "(player_uuid, related_uuid, relation_type) " +
-                "VALUES (?, ?, ?)";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, relation.getPlayerUuid().toString());
-            ps.setString(2, relation.getRelatedUuid().toString());
-            ps.setString(3, relation.getRelationType().name());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "[Database] Gagal simpan family relation", e);
-        }
-    }
-
-    public List<FamilyRelation> getRelationsByPlayer(
-            UUID uuid,
-            RelationType type
-    ) {
-        List<FamilyRelation> hasil = new ArrayList<>();
-
-        String sql =
-                "SELECT * FROM family_relation " +
-                "WHERE player_uuid = ? AND relation_type = ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, uuid.toString());
-            ps.setString(2, type.name());
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    hasil.add(new FamilyRelation(
-                            rs.getInt("id"),
-                            UUID.fromString(rs.getString("player_uuid")),
-                            UUID.fromString(rs.getString("related_uuid")),
-                            RelationType.valueOf(rs.getString("relation_type"))
-                    ));
-                }
-            }
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "[Database] Gagal ambil family relations", e);
-        }
-
-        return hasil;
-    }
-
-    public int countChildren(UUID parentUuid) {
-        return getRelationsByPlayer(parentUuid, RelationType.PARENT).size();
-    }
-
-    /**
-     * Emergency patch:
-     * Menghapus satu relasi keluarga berdasarkan kedua UUID dan tipe relasi.
-     */
-    public void deleteFamilyRelation(
-            UUID playerUuid,
-            UUID relatedUuid,
-            RelationType relationType
-    ) {
-        String sql =
-                "DELETE FROM family_relation " +
-                "WHERE player_uuid = ? " +
-                "AND related_uuid = ? " +
-                "AND relation_type = ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, playerUuid.toString());
-            ps.setString(2, relatedUuid.toString());
-            ps.setString(3, relationType.name());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "[Database] Gagal menghapus family relation", e);
         }
     }
 

@@ -1,13 +1,8 @@
 # ===== Debug Mode =====
 # Kalau true, plugin akan cetak log tambahan ke console server
-# buat bantu troubleshooting (propose, adopsi, dll).
-# Bisa juga di-toggle langsung in-game pakai /marry debug <on|off>
+# buat bantu troubleshooting (propose, dll).
+# Bisa juga di-toggle langsung in-game pakai /marriageadmin debug <on|off>
 debug: false
-
-family:
-  enabled: true
-  allow-adoption: true
-  max-children: 4
 
 # ===== Database =====
 database:
@@ -52,26 +47,3 @@ messages:
   not-married: "&cKamu belum menikah."
   divorce-success: "&cKamu resmi bercerai."
   divorce-notify: "&c%player% mengajukan perceraian denganmu."
-
-  # ===== FamilyCommand =====
-  family-disabled: "&cSistem keluarga sedang dinonaktifkan."
-  family-usage: "&cGunakan: /family <adopt|accept|deny|list|info|remove> [player]"
-  family-unknown-action: "&cAksi tidak dikenal."
-  family-usage-adopt: "&cGunakan: /family adopt <player>"
-  family-adoption-disabled: "&cFitur adopsi sedang dinonaktifkan."
-  family-must-be-married: "&cKamu harus menikah dulu sebelum bisa mengadopsi anak."
-  family-max-children: "&cKamu sudah mencapai batas maksimal anak (%max%)."
-  family-cannot-adopt-self: "&cKamu tidak bisa mengadopsi diri sendiri."
-  family-target-has-parent: "&c%player% sudah punya orang tua."
-  family-adopt-sent: "&aPermintaan adopsi terkirim ke %player%!"
-  family-adopt-received: "&d%player% ingin mengadopsimu sebagai anak! Ketik /family accept dalam %timeout% detik."
-  family-adopt-expired: "&7Permintaan adopsi sudah kadaluarsa."
-  family-no-pending-adoption: "&cTidak ada permintaan adopsi yang menunggumu."
-  family-adopt-success: "&aKamu sekarang menjadi anak dari keluarga %player%!"
-  family-adopt-success-notify: "&a%player% menerima adopsimu!"
-  family-adopt-denied: "&cKamu menolak permintaan adopsi."
-  family-adopt-denied-notify: "&c%player% menolak adopsimu."
-  family-usage-remove: "&cGunakan: /family remove <player>"
-  family-not-your-child: "&cPlayer tersebut bukan anakmu."
-  family-remove-success: "&a%player% berhasil dikeluarkan dari keluarga."
-  family-remove-notify: "&eKamu tidak lagi terdaftar sebagai anak dari %player%."

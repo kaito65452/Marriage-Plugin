@@ -1,22 +1,35 @@
 name: Marriage-Plugin
-version: '1.0.2 HOTFIX'
-description: "Plugin pernikahan dan sistem keluarga untuk server Minecraft"
+version: '${version}'
+description: "Plugin pernikahan untuk server Minecraft"
 website: "https://github.com/Sahur01-arch/Marriage-Plugin/"
 main: com.ryushin.marriage.MarriagePlugin
 api-version: '1.21'
 author: Ryushin
-# authors: [Ryushin, NamaKedua]   # <- pakai ini kalau kontributornya lebih dari 1 (author tunggal + authors tidak boleh dipakai bersamaan)
+softdepend: [Vault, Essentials]
+
 commands:
   marry:
-    description: Menikah dengan pemain
-  family:
-    description: Mengelola relasi keluarga
-  marriageadmin:
-    description: Perintah admin plugin (reload config, toggle debug)
-    permission: marriage.admin
+    description: Perintah utama pernikahan
+    aliases: [marriage]
+    permission: marriage.use
     permission-message: "&cKamu tidak punya izin menggunakan command ini."
 
 permissions:
+  marriage.use:
+    description: Izin dasar untuk menggunakan fitur pernikahan
+    default: true
+  marriage.kiss:
+    description: Izin untuk berciuman dengan pasangan
+    default: true
+  marriage.gift:
+    description: Izin untuk mengirim uang dan item ke pasangan
+    default: true
+  marriage.tp:
+    description: Izin untuk teleport ke pasangan
+    default: true
+  marriage.home:
+    description: Izin untuk mengatur dan menggunakan home bersama pasangan
+    default: true
   marriage.admin:
     description: Izin untuk reload config dan toggle debug mode
     default: op

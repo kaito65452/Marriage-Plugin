@@ -7,20 +7,26 @@
 
 plugins {
   id("java")
-  id("com.gradleup.shadow") version "9.6.1"
 }
 
 group = "com.ryushin"
-version = "1.0.2+HOTFIX"
+version = "2.0.0"
 
 repositories {
   mavenCentral()
   maven("https://repo.papermc.io/repository/maven-public/")
+  maven("https://jitpack.io")
+  maven("https://repo.essentialsx.net/releases/")
 }
 
 dependencies {
-  compileOnly("io.papermc.paper:paper-api:26.2.build.+")
-  implementation("org.xerial:sqlite-jdbc:3.47.1.0")
+  compileOnly("io.papermc.paper:paper-api:26.2.build.135-stable")
+  compileOnly("com.github.MilkBowl:VaultAPI:1.7.1") {
+    exclude(group = "org.bukkit")
+  }
+  compileOnly("net.essentialsx:EssentialsX:2.20.1") {
+    isTransitive = false
+  }
 }
 
 java {
@@ -28,11 +34,12 @@ java {
 }
 
 tasks {
-  shadowJar {
-    archiveClassifier.set("")
-    relocate("org.sqlite", "com.ryushin.marriage.libs.sqlite")
-  }
-  build {
-    dependsOn(shadowJar)
+  processResources {
+    val props = mapOf("version" to project.version)
+    inputs.properties(props)
+    filteringCharset = "UTF-8"
+    filesMatching("plugin.yml") {
+      expand(props)
+    }
   }
 }
